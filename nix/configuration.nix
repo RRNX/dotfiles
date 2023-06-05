@@ -1,1 +1,324 @@
-/etc/nixos/configuration.nix
+#Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      ./home.nix
+
+      # VSCode Server
+      (fetchTarball "https://github.com/nix-community/nixos-vscode-server/tarball/master")
+    ];
+
+  nix.settings.experimental-features = [ "nix-command" "flakes"];
+
+  # Bootloader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+	boot.kernelParams = [
+		"amd-iommu=on"
+    "hid_apple.fnmode=2"
+    "hid_apple.swap_fn_leftctrl=1"
+    "hid_apple.swap_opt_cmd=1"
+	];
+  # Virtualisation
+  virtualisation.docker.enable = true;
+  virtualisation.libvirtd.enable = true;
+  
+
+  networking.hostName = "hannesnix"; # Define your hostname.
+  networking.enableIPv6 = false;
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+
+  # Set your time zone.
+  time.timeZone = "Europe/Berlin";
+  networking.firewall.enable = false;
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "de_DE.UTF-8";
+    LC_IDENTIFICATION = "de_DE.UTF-8";
+    LC_MEASUREMENT = "de_DE.UTF-8";
+    LC_MONETARY = "de_DE.UTF-8";
+    LC_NAME = "de_DE.UTF-8";
+    LC_NUMERIC = "de_DE.UTF-8";
+    LC_PAPER = "de_DE.UTF-8";
+    LC_TELEPHONE = "de_DE.UTF-8";
+    LC_TIME = "de_DE.UTF-8";
+  };
+
+  # Configure keymap in X11
+  sound.enable = true;
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  security.polkit.enable = true;
+  services = {
+  	xserver = {
+    		layout = "de";
+    		xkbVariant = "";
+	};
+	pipewire = {
+		enable = true;
+		alsa.enable = true;
+		alsa.support32Bit = true;
+		pulse.enable = true;
+	};
+	openssh = {
+		enable = true;
+		settings = {
+			PermitRootLogin = "no";
+			PasswordAuthentication = false;
+		};
+	};
+	logind = {
+		lidSwitch = "ignore";
+	};
+  vscode-server = {
+    enable = true;
+  };
+  };
+
+  # Configure console keymap
+  console.keyMap = "de";
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.mutableUsers = false;
+
+	hardware.bluetooth.enable = true;
+	services.blueman.enable = true;
+
+  users.users.hannes = {
+  	shell = pkgs.zsh;
+    isNormalUser = true;
+    description = "hannes";
+    extraGroups = [ "networkmanager" "wheel" "audio" "docker" "libvirt" "adbusers" ];
+    hashedPassword = "$y$j9T$nNdfgK4n7UB3AaU2grsC//$q8ut0GsiVOm7OPWGoS/anrgx2FGbnZvxXOA5Ejw5720";
+    home = "/home/hannes";
+    openssh.authorizedKeys.keyFiles = [ 
+      /home/hannes/.ssh/authorized_Keys 
+      /home/hannes/.ssh/authorized_Keys2
+    ];
+    packages = with pkgs; [
+      # language server
+      lua-language-server
+      nodePackages_latest.bash-language-server
+      nodePackages_latest.pyright
+      python311Packages.python-lsp-server
+      clang-tools
+
+      # passwordmanager
+      keepass
+      networkmanagerapplet
+
+      busybox
+      
+      # internet
+      nixpkgs-fmt
+      rclone
+      vscode
+      spaceship-prompt
+      gnumake
+      rsync
+      syncthing
+      firefox
+      helix
+      lazygit
+      nil
+      google-chrome
+      qbittorrent
+      # notes
+      obsidian
+      # code / terminal
+      zoxide
+      git
+      neovim
+      clang-tools
+      gcc
+      fzf
+      ripgrep
+      kitty
+      zsh-syntax-highlighting
+      pure-prompt
+      xdg-desktop-portal-hyprland
+      xdg-utils
+      openjdk19
+      # atuin
+      # container
+      docker
+      docker-compose
+      evince
+      cdrtools
+      terraform
+
+      virt-manager
+
+      #chat
+      whatsapp-for-linux
+      discord
+      signal-desktop
+      #games
+      steam
+      # prismlauncher-qt5
+      wine
+      bottles
+      #mail 
+      evolution
+      protonmail-bridge
+      #theme
+      gradience
+      adw-gtk3
+      lxappearance
+      # hardware / stats
+      via # somehow doesnt work, appimage in repo works on arch tho
+      netdata
+      radeontop
+      liquidctl
+      lm_sensors
+      openrgb
+      # video 
+      jellyfin-media-player
+      celluloid
+      kodi-wayland
+      mpv
+      yt-dlp
+      waybar
+      # images
+      gimp
+      feh
+      # gnome shell 
+      # gnome.gnome-tweaks
+      # gnome-extension-manager
+      # gnomeExtensions.blur-my-shell
+      # gnomeExtensions.mullvad-indicator
+      # gnomeExtensions.tray-icons-reloaded
+      libwebp
+      rofi
+      # misc
+      wtype # does not work on gnome
+      ydotool
+      wl-clipboard
+      libqalculate
+
+      # reverse engineering
+      radare2
+      unixtools.xxd
+
+      # desktop things / using gnome in this case
+      # polkit_gnome
+      polkit
+      gnome.nautilus
+      gnome.sushi
+      polkit_gnome
+      # udisks # gnome disks backend
+      gnome.gnome-disk-utility
+      gnome.gnome-font-viewer
+      gnome.eog
+      gnome.simple-scan
+      gnome.adwaita-icon-theme
+      # gnome.gnome-control-center
+
+      # libs
+      imlib2Full
+
+      # window manager tools
+      wofi
+      gammastep
+      swaybg
+      pavucontrol
+      brightnessctl
+      libnotify
+      # screenshot stack lel
+      grim
+      slurp
+      swappy
+];
+  };
+  
+  programs.adb.enable = true;
+
+  programs.zsh = {
+	enable = true;
+	autosuggestions.enable = true;
+	ohMyZsh.enable = true;
+	ohMyZsh.plugins = ["git" "zoxide" "vi-mode" "fzf"];
+	syntaxHighlighting.enable = true;
+  };
+
+  programs.hyprland.enable = true;
+
+  programs.dconf.enable = true;
+
+	xdg.portal.wlr.enable = true; 
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "Iosevka" "DroidSansMono" ]; })
+  	iosevka
+	cantarell-fonts
+  ];
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowUnsupportedSystem = true;
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
+  environment.systemPackages = with pkgs; [
+  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+  #  wget
+  ];
+
+  # Some programs need SUID wrappers, can be configured further or are
+  # started in user sessions.
+  # programs.mtr.enable = true;
+  # programs.gnupg.agent = {
+  #   enable = true;
+  #   enableSSHSupport = true;
+  # };
+
+  # Open ports in the firewall.
+  # networking.firewall.allowedTCPPorts = [ ... ];
+  # networking.firewall.allowedUDPPorts = [ ... ];
+  # Or disable the firewall altogether.
+  # networking.firewall.enable = false;
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "22.11"; # Did you read the comment?
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = false;
+
+  systemd = {
+    user.services.polkit-gnome-authentication-agent-1 = {
+      description = "polkit-gnome-authentication-agent-1";
+      wantedBy = [ "graphical-session.target" ];
+      wants = [ "graphical-session.target" ];
+      after = [ "graphical-session.target" ];
+      serviceConfig = {
+          Type = "simple";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+          Restart = "on-failure";
+          RestartSec = 1;
+          TimeoutStopSec = 10;
+        };
+    };
+  };
+}

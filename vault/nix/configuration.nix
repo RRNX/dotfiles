@@ -71,7 +71,10 @@
   services = {
   	xserver = {
     		layout = "de";
+		enable = true;
     		xkbVariant = "";
+		displayManager.sddm.enable = true;
+		displayManager.sddm.theme = "catpuccin-flavour";
 	};
 	pipewire = {
 		enable = true;
@@ -103,6 +106,11 @@
 	hardware.bluetooth.enable = true;
 	services.blueman.enable = true;
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-25.9.0"
+    "electron-19.1.9"
+  ];
+
   users.users.hannes = {
   	shell = pkgs.zsh;
     isNormalUser = true;
@@ -111,21 +119,20 @@
     hashedPassword = "$y$j9T$nNdfgK4n7UB3AaU2grsC//$q8ut0GsiVOm7OPWGoS/anrgx2FGbnZvxXOA5Ejw5720";
     home = "/home/hannes";
     openssh.authorizedKeys.keyFiles = [ 
-      /home/hannes/.ssh/authorized_Keys 
-      /home/hannes/.ssh/authorized_Keys2
+      /home/hannes/.ssh/authorized_keys 
+      /home/hannes/.ssh/authorized_keys2
     ];
     packages = with pkgs; [
       # language server
       lua-language-server
       nodePackages_latest.bash-language-server
       nodePackages_latest.pyright
+      python3
       python311Packages.python-lsp-server
       clang-tools
 
       # passwordmanager
-      keepass
       networkmanagerapplet
-
       busybox
       
       # internet
@@ -142,15 +149,19 @@
       nil
       google-chrome
       qbittorrent
+      etcher
       # notes
       obsidian
+      openvpn
       # code / terminal
       zoxide
       git
       neovim
       clang-tools
       gcc
+      unetbootin
       fzf
+      mattermost
       ripgrep
       kitty
       zsh-syntax-highlighting
@@ -167,13 +178,13 @@
       terraform
 
       virt-manager
+      magic-wormhole
 
       #chat
       whatsapp-for-linux
       discord
       signal-desktop
       #games
-      steam
       # prismlauncher-qt5
       wine
       bottles
@@ -219,9 +230,14 @@
       radare2
       unixtools.xxd
 
+      # latex
+      texlive.combined.scheme-medium
+      texlab
+      ltex-ls
+
       # desktop things / using gnome in this case
-      # polkit_gnome
-      polkit
+      polkit_gnome
+      # polkit
       gnome.nautilus
       gnome.sushi
       polkit_gnome
@@ -235,6 +251,7 @@
 
       # libs
       imlib2Full
+      wireshark
 
       # window manager tools
       wofi
@@ -247,6 +264,9 @@
       grim
       slurp
       swappy
+      gparted
+
+      jetbrains.idea-ultimate
 ];
   };
   
@@ -264,12 +284,18 @@
 
   programs.dconf.enable = true;
 
-	xdg.portal.wlr.enable = true; 
+	xdg.portal.wlr.enable = false; 
   fonts.fonts = with pkgs; [
     (nerdfonts.override { fonts = [ "Iosevka" "DroidSansMono" ]; })
   	iosevka
 	cantarell-fonts
   ];
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = false;
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -305,6 +331,23 @@
   system.stateVersion = "22.11"; # Did you read the comment?
   system.autoUpgrade.enable = true;
   system.autoUpgrade.allowReboot = false;
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (
+        subject.isInGroup("users")
+          && (
+            action.id == "org.freedesktop.login1.reboot" ||
+            action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+            action.id == "org.freedesktop.login1.power-off" ||
+            action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+          )
+        )
+      {
+        return polkit.Result.YES;
+      }
+    })
+  '';
 
   systemd = {
     user.services.polkit-gnome-authentication-agent-1 = {

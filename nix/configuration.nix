@@ -142,113 +142,117 @@
       python3
       python311Packages.python-lsp-server
       clang-tools
-
-      # passwordmanager
-      networkmanagerapplet
-      busybox
-
-      usbutils
-      
-      # internet
-      nixpkgs-fmt
-      rclone
-      vscode
-      spaceship-prompt
-      gnumake
-      rsync
-      syncthing
-      firefox
-      helix
-      lazygit
       nil
+      nixpkgs-fmt
+      gnumake
+
+      # System
+      busybox
+      usbutils
+      unetbootin
+      cdrtools
+      virt-manager
+
+      # Sync (needed later)
+      #rclone
+      #rsync
+      #syncthing
+      
+      # Internet
+      firefox
       google-chrome
       qbittorrent
+
       # notes
       obsidian
+
+      # VPN
       openvpn
-      # code / terminal
-      zoxide
-      git
+
+      # Code
+      vscode
+      helix
       neovim
+      vim
+      android-studio-stable
+      jetbrains.idea-ultimate
+
+      # Terminal
+      pure-prompt
+      tofi
       clang-tools
       gcc
       grc
-      unetbootin
       fzf
-      mattermost
       ripgrep
-      kitty
-      tofi
-      zsh-syntax-highlighting
-      pure-prompt
+      git
+      zoxide
+
+
+      # Hyprland
       xdg-desktop-portal-hyprland
       hyprpaper
       hyprcursor
+      # needed for hyprcursor conversion
       xcur2png
       xdg-utils
+      waybar
+
+      # Java
       openjdk19
-      # atuin
-      # container
+
+      # Container
       docker
       docker-compose
-      evince
-      cdrtools
-      terraform
 
+      # Fringerprint support
       #fprintd-tod
       #libfprint-2-tod1-goodix-550a
 
-      virt-manager
       magic-wormhole
 
       #chat
       whatsapp-for-linux
       discord
       signal-desktop
-      #games
+      mattermost
+      # Games
       # prismlauncher-qt5
       wine
       bottles
-      #mail 
+
+      # Mail 
       evolution
       protonmail-bridge
-      #theme
+
+      # Themes
       gradience
       adw-gtk3
       lxappearance
-      # hardware / stats
-      via # somehow doesnt work, appimage in repo works on arch tho
+
+      # Hardware
       netdata
       radeontop
-      liquidctl
       lm_sensors
       openrgb
       plymouth
-      # video 
-      jellyfin-media-player
+
+      # Video 
       celluloid
       kodi-wayland
       mpv
-      yt-dlp
-      waybar
-      # images
+
+      # Images
       gimp
       feh
-      # gnome shell 
-      # gnome.gnome-tweaks
-      # gnome-extension-manager
-      # gnomeExtensions.blur-my-shell
-      # gnomeExtensions.mullvad-indicator
-      # gnomeExtensions.tray-icons-reloaded
       libwebp
-      gnome.gdm 
-      # misc
+      gnome.gdm
+      # Misc
       wtype # does not work on gnome
-      ydotool
       wl-clipboard
       libqalculate
 
-      # reverse engineering
+      # Reverse engineering
       radare2
       unixtools.xxd
 
@@ -262,7 +266,6 @@
       # polkit
       gnome.nautilus
       gnome.sushi
-      polkit_gnome
       # udisks # gnome disks backend
       gnome.gnome-disk-utility
       gnome.gnome-font-viewer
@@ -287,20 +290,10 @@
       slurp
       swappy
       gparted
-
-      jetbrains.idea-ultimate
 ];
   };
   
   programs.adb.enable = true;
-
-  programs.zsh = {
-	enable = true;
-	autosuggestions.enable = true;
-	ohMyZsh.enable = true;
-	ohMyZsh.plugins = ["git" "zoxide" "vi-mode" "fzf"];
-	syntaxHighlighting.enable = true;
-  };
 
   programs.hyprland.enable = true;
 

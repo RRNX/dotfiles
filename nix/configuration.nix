@@ -174,7 +174,8 @@
       helix
       neovim
       vim
-      android-studio-stable
+      kitty
+      android-studio
       jetbrains.idea-ultimate
 
       # Terminal

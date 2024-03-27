@@ -24,13 +24,35 @@ in
       ];
     };
 
+    home.pointerCursor = 
+    let 
+      getFrom = url: hash: name: {
+          gtk.enable = true;
+          x11.enable = true;
+          name = name;
+          size = 28;
+          package = 
+            pkgs.runCommand "moveUp" {} ''
+              mkdir -p $out/share/icons
+              ln -s ${pkgs.fetchzip {
+                url = url;
+                hash = hash;
+              }} $out/share/icons/${name}
+          '';
+        };
+    in
+      getFrom 
+        "https://github.com/RRNX/dotfiles/raw/master/volantes-cursors.tar.gz"
+        "sha256-YawzGg5YwpeTsR5+haqM2cVPrX84fJ8Xn4e9Tk50Xo0="
+        "Volantes-Cursors";
+
+
     gtk = {
       enable = true;
       theme = {
         name = "adw-gtk3";
         package = pkgs.adw-gtk3;
       };
-      cursorTheme.name = "rrnx_cursor";
     };
 
     home.sessionPath = [
@@ -190,11 +212,13 @@ in
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "gammastep -l 52.504575130169165:13.395872421222853"
           "waybar -b mainBar"
-          "hyprcursor setcursor pointer 26"
+          "hyprcursor setcursor pointer 28"
+          "nm-applet --indicator"
+          "dunst"
         ];
         windowrule = [ "rounding 10,^(org.gnome.Nautilus)$" ];
         blurls = [ "gtk-layer-shell" ];
-        env = [ "HYPRCURSOR_THEME, rrnx_cursor" ];
+        env = [ "HYPRCURSOR_THEME, Volantes-Cursors" ];
       };
     };
     programs.waybar = {

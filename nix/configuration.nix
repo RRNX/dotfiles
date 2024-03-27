@@ -102,11 +102,11 @@
     vscode-server = {
       enable = true;
     };
-    fprintd = {
-      enable = true;
-      tod.enable = true;
-      tod.driver = pkgs.libfprint-2-tod1-goodix-550a;
-    };
+    #fprintd = {
+    #  enable = true;
+    #  tod.enable = true;
+    #  tod.driver = pkgs.libfprint-2-tod1-goodix-550a;
+    #};
   };
 
   # Configure console keymap
@@ -195,8 +195,8 @@
       cdrtools
       terraform
 
-      fprintd-tod
-      libfprint-2-tod1-goodix-550a
+      #fprintd-tod
+      #libfprint-2-tod1-goodix-550a
 
       virt-manager
       magic-wormhole
@@ -276,13 +276,13 @@
       wireshark
 
       # window manager tools
-      wofi
       gammastep
       swaybg
       pavucontrol
       brightnessctl
       libnotify
-      # screenshot stack lel
+      dunst
+      # screenshot stack 
       grim
       slurp
       swappy
@@ -307,6 +307,7 @@
   programs.dconf.enable = true;
 
 	xdg.portal.wlr.enable = false; 
+	xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "Iosevka" "DroidSansMono" "GeistMono" ]; })
   	iosevka

@@ -5,6 +5,13 @@
 { config, pkgs, ... }:
 
 {
+  
+  nixpkgs.config.packageOverrides = pkgs: {
+    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+      inherit pkgs;
+    };
+  };
+  
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -32,7 +39,7 @@
   virtualisation.libvirtd.enable = true;
   
 
-  networking.hostName = "hannesnix"; # Define your hostname.
+  networking.hostName = "sonic"; # Define your hostname.
   networking.enableIPv6 = false;
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -70,31 +77,36 @@
   security.polkit.enable = true;
   services = {
   	xserver = {
-    		layout = "de";
-		enable = true;
-    		xkbVariant = "";
-		displayManager.sddm.enable = true;
-		displayManager.sddm.theme = "catpuccin-flavour";
-	};
-	pipewire = {
-		enable = true;
-		alsa.enable = true;
-		alsa.support32Bit = true;
-		pulse.enable = true;
-	};
-	openssh = {
-		enable = true;
-		settings = {
-			PermitRootLogin = "no";
-			PasswordAuthentication = false;
-		};
-	};
-	logind = {
-		lidSwitch = "ignore";
-	};
-  vscode-server = {
-    enable = true;
-  };
+    	xkb.layout = "de";
+		  enable = true;
+    	xkb.variant = "";
+		  displayManager.gdm.enable = true;
+		  displayManager.gdm.wayland = true;
+	  };
+	  pipewire = {
+		  enable = true;
+		  alsa.enable = true;
+		  alsa.support32Bit = true;
+		  pulse.enable = true;
+	  };
+	  openssh = {
+		  enable = true;
+		  settings = {
+			  PermitRootLogin = "no";
+			  PasswordAuthentication = false;
+		  };
+	  };
+	  logind = {
+		  lidSwitch = "ignore";
+	  };
+    vscode-server = {
+      enable = true;
+    };
+    fprintd = {
+      enable = true;
+      tod.enable = true;
+      tod.driver = pkgs.libfprint-2-tod1-goodix-550a;
+    };
   };
 
   # Configure console keymap
@@ -106,22 +118,22 @@
 	hardware.bluetooth.enable = true;
 	services.blueman.enable = true;
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-    "electron-19.1.9"
-  ];
-
+  #nixpkgs.config.permittedInsecurePackages = [
+  #  "electron-25.9.0"
+  #  "electron-19.1.9"
+  #];
+  programs.fish.enable = true;
   users.users.hannes = {
-  	shell = pkgs.zsh;
+    shell = pkgs.fish;
     isNormalUser = true;
     description = "hannes";
-    extraGroups = [ "networkmanager" "wheel" "audio" "docker" "libvirt" "adbusers" ];
-    hashedPassword = "$y$j9T$nNdfgK4n7UB3AaU2grsC//$q8ut0GsiVOm7OPWGoS/anrgx2FGbnZvxXOA5Ejw5720";
+    extraGroups = [ "networkmanager" "wheel" "audio" "docker" "libvirt" "adbusers" "input" "users"];
+    hashedPassword = "$6$ymfeFZcGMIg4TXwl$UBqUfBKDrBsUDA4ZwReQbk0soGpYVMKdTyFDSXjWqxHOWy6XDEFly2UgMlSc1d5adC.orsPt3LPVeTeLVCU1B.";
     home = "/home/hannes";
-    openssh.authorizedKeys.keyFiles = [ 
-      /home/hannes/.ssh/authorized_keys 
-      /home/hannes/.ssh/authorized_keys2
-    ];
+    #openssh.authorizedKeys.keyFiles = [ 
+    #  /home/hannes/.ssh/authorized_keys 
+    #  /home/hannes/.ssh/authorized_keys2
+    #];
     packages = with pkgs; [
       # language server
       lua-language-server
@@ -134,6 +146,8 @@
       # passwordmanager
       networkmanagerapplet
       busybox
+
+      usbutils
       
       # internet
       nixpkgs-fmt
@@ -149,7 +163,6 @@
       nil
       google-chrome
       qbittorrent
-      etcher
       # notes
       obsidian
       openvpn
@@ -159,14 +172,19 @@
       neovim
       clang-tools
       gcc
+      grc
       unetbootin
       fzf
       mattermost
       ripgrep
       kitty
+      tofi
       zsh-syntax-highlighting
       pure-prompt
       xdg-desktop-portal-hyprland
+      hyprpaper
+      hyprcursor
+      xcur2png
       xdg-utils
       openjdk19
       # atuin
@@ -176,6 +194,9 @@
       evince
       cdrtools
       terraform
+
+      fprintd-tod
+      libfprint-2-tod1-goodix-550a
 
       virt-manager
       magic-wormhole
@@ -202,6 +223,7 @@
       liquidctl
       lm_sensors
       openrgb
+      plymouth
       # video 
       jellyfin-media-player
       celluloid
@@ -219,7 +241,7 @@
       # gnomeExtensions.mullvad-indicator
       # gnomeExtensions.tray-icons-reloaded
       libwebp
-      rofi
+      gnome.gdm 
       # misc
       wtype # does not work on gnome
       ydotool
@@ -285,10 +307,11 @@
   programs.dconf.enable = true;
 
 	xdg.portal.wlr.enable = false; 
-  fonts.fonts = with pkgs; [
-    (nerdfonts.override { fonts = [ "Iosevka" "DroidSansMono" ]; })
+  fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "Iosevka" "DroidSansMono" "GeistMono" ]; })
   	iosevka
-	cantarell-fonts
+	  cantarell-fonts
+    font-awesome_5
   ];
 
   programs.steam = {
@@ -345,6 +368,11 @@
         )
       {
         return polkit.Result.YES;
+      }
+    })
+    polkit.addRule(function (action, subject) {
+      if (action.id == "net.reactivated.fprint.device.enroll") {
+        return subject.isInGroup("input") ? polkit.Result.YES : polkit.result.NO
       }
     })
   '';

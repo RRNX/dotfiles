@@ -238,6 +238,7 @@
       lm_sensors
       openrgb
       plymouth
+      bottom
 
       # Video 
       celluloid

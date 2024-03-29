@@ -17,6 +17,8 @@ in
         set fish_greeting # Disable greeting
         zoxide init fish | source
         alias cd=z
+        alias htop=btm
+        alias bottom=btm
       '';
       plugins = [
         { name = "grc"; src = pkgs.fishPlugins.grc.src; }

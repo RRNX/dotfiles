@@ -152,6 +152,7 @@
       unetbootin
       cdrtools
       virt-manager
+      netcat
 
       # Sync (needed later)
       #rclone
@@ -180,7 +181,7 @@
 
       # Terminal
       pure-prompt
-      tofi
+      rofi-wayland
       clang-tools
       gcc
       grc
@@ -391,5 +392,8 @@
           TimeoutStopSec = 10;
         };
     };
+  };
+  environment.sessionVariables = {
+    XDG_CONFIG_HOME = "$HOME/.config";
   };
 }

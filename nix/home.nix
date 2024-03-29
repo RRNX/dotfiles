@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
 in
@@ -134,7 +134,7 @@ in
           "$mod, E, exec, firefox"
           "$mod, I, togglefloating"
           "$mod, F, fullscreen"
-          "$mod, SPACE, exec, pkill tofi-drun || tofi-drun --drun-launch=true"
+          "$mod, SPACE, exec, pkill rofi -show drun -show-icons || rofi -show drun -show-icons"
           "$mod, V, togglesplit"
           #""mod SHIFT, D, exec, grim -g "$(slurp)" - | swappy -f -  -o - | wl-copy"
           "$mod, h, movefocus, l"
@@ -222,6 +222,9 @@ in
         windowrule = [ "rounding 10,^(org.gnome.Nautilus)$" ];
         blurls = [ "gtk-layer-shell" ];
         env = [ "HYPRCURSOR_THEME, Volantes-Cursors" ];
+        misc = {
+          "layers_hog_keyboard_focus" = "true";
+        };
       };
     };
     programs.waybar = {
@@ -449,6 +452,105 @@ in
     
     programs.zoxide.enable = true;
     programs.zoxide.enableFishIntegration = true;
+
+    home.file.".config/rofi/config.rasi".text = ''
+      * {
+          bg0:    #212121F2;
+          bg1:    #2A2A2A;
+          bg2:    #3D3D3D80;
+          bg3:    #616161F2;
+          fg0:    #E6E6E6;
+          fg1:    #FFFFFF;
+          fg2:    #969696;
+          fg3:    #3D3D3D;
+
+          font:   "Roboto 12";
+
+          background-color:   transparent;
+          text-color:         @fg0;
+
+          margin:     0px;
+          padding:    0px;
+          spacing:    0px;
+      }
+
+      window {
+          location:       center;
+          width:          480;
+          border-radius:  24px;
+          
+          background-color:   @bg0;
+      }
+
+      mainbox {
+          padding:    12px;
+      }
+
+      inputbar {
+          background-color:   @bg1;
+          border-color:       @bg3;
+
+          border:         2px;
+          border-radius:  16px;
+
+          padding:    8px 16px;
+          spacing:    8px;
+          children:   [ prompt, entry ];
+      }
+
+      prompt {
+          text-color: @fg2;
+      }
+
+      entry {
+          placeholder:        "Search";
+          placeholder-color:  @fg3;
+      }
+
+      message {
+          margin:             12px 0 0;
+          border-radius:      16px;
+          border-color:       @bg2;
+          background-color:   @bg2;
+      }
+
+      textbox {
+          padding:    8px 24px;
+      }
+
+      listview {
+          background-color:   transparent;
+
+          margin:     12px 0 0;
+          lines:      8;
+          columns:    1;
+
+          fixed-height: false;
+      }
+
+      element {
+          padding:        8px 16px;
+          spacing:        8px;
+          border-radius:  16px;
+      }
+
+      element normal active {
+          text-color: @bg3;
+      }
+
+      element selected normal, element selected active {
+          background-color:   @bg3;
+      }
+
+      element-icon {
+          size:           1em;
+          vertical-align: 0.5;
+      }
+
+      element-text {
+          text-color: inherit;
+      }
+ 
+    '';
   };
 }
-

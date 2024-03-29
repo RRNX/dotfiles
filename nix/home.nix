@@ -15,6 +15,8 @@ in
       enable = true;
       interactiveShellInit = ''
         set fish_greeting # Disable greeting
+        zoxide init fish | source
+        alias cd=z
       '';
       plugins = [
         { name = "grc"; src = pkgs.fishPlugins.grc.src; }
@@ -444,6 +446,9 @@ in
         };
       };
     };
+    
+    programs.zoxide.enable = true;
+    programs.zoxide.enableFishIntegration = true;
   };
 }
 

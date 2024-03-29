@@ -166,7 +166,8 @@ in
         ];
         monitor = [
           "eDP-1,1920x1080@60,0x0,1"
-          "DP-1,2560x1440@165,2560x0,1"
+          "desc:AOC 2460G4 0x0000C956,1920x1080@144,-1920x0,1"
+          ",preferred,auto,1"
         ];
         input = {
           "kb_layout" = "de";

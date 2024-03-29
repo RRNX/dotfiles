@@ -291,6 +291,9 @@
       slurp
       swappy
       gparted
+
+      # Music
+      spotify
 ];
   };
   

@@ -127,7 +127,7 @@
     shell = pkgs.fish;
     isNormalUser = true;
     description = "hannes";
-    extraGroups = [ "networkmanager" "wheel" "audio" "docker" "libvirt" "adbusers" "input" "users"];
+    extraGroups = [ "networkmanager" "wheel" "audio" "docker" "libvirt" "adbusers" "input" "users" "wireshark" ];
     hashedPassword = "$6$ymfeFZcGMIg4TXwl$UBqUfBKDrBsUDA4ZwReQbk0soGpYVMKdTyFDSXjWqxHOWy6XDEFly2UgMlSc1d5adC.orsPt3LPVeTeLVCU1B.";
     home = "/home/hannes";
     #openssh.authorizedKeys.keyFiles = [ 
@@ -302,6 +302,8 @@
   programs.hyprland.enable = true;
 
   programs.dconf.enable = true;
+
+  programs.wireshark.enable = true;
 
 	xdg.portal.wlr.enable = false; 
 	xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];

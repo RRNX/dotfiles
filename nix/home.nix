@@ -233,7 +233,7 @@ in
       enable = true;
       style = ''
         * {
-            font-family: "Iosevka Nerd Font", Cantarell, sans-serif;
+            font-family: "DroidSansMono Nerd Font", Cantarell, sans-serif;
             font-size: 16px;
         }
 
@@ -399,7 +399,7 @@ in
           };
           "cpu" = {
             interval = "5";
-            format = "  {}%";
+            format = "     {}%";
             max-length = "10";
           };
           memory = {

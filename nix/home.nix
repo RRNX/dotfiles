@@ -453,7 +453,11 @@ in
     };
     
     programs.zoxide.enable = true;
-    programs.zoxide.enableFishIntegration = true;
+
+    home.file.".config/hypr/hyprpaper.conf".text = ''
+      preload = /home/hannes/.config/wallpaper/wallpaper.png
+      splash = false
+    '';
 
     home.file.".config/rofi/config.rasi".text = ''
       * {

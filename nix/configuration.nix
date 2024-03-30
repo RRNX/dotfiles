@@ -84,8 +84,10 @@
         enable = true;
         wayland = true;
         settings = {
-          AutomaticLoginEnable = true;
-          AutomaticLogin = "hannes";
+          deamon = {
+            AutomaticLoginEnable = true;
+            AutomaticLogin = "hannes";
+          };
         };
       };
 	  };

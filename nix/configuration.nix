@@ -80,8 +80,14 @@
     	xkb.layout = "de";
 		  enable = true;
     	xkb.variant = "";
-		  displayManager.gdm.enable = true;
-		  displayManager.gdm.wayland = true;
+		  displayManager.gdm = {
+        enable = true;
+        wayland = true;
+        settings = {
+          AutomaticLoginEnable = true;
+          AutomaticLogin = "hannes";
+        };
+      };
 	  };
 	  pipewire = {
 		  enable = true;
@@ -195,6 +201,7 @@
       xdg-desktop-portal-hyprland
       hyprpaper
       hyprcursor
+      hypridle
       # needed for hyprcursor conversion
       xcur2png
       xdg-utils

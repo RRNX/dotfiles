@@ -459,6 +459,19 @@ in
       splash = false
     '';
 
+    home.file.".config/hypr/hypridle.conf".text = ''
+      listener = {
+        timeout = 300
+        on-timeout = hyprctl dispatch dpms off
+        on-resume = hyprctl dispatch dpms on
+      }
+
+      listener = {
+        timeout = 1800
+        on-timeout = systemctl suspend
+      }
+    '';
+
     home.file.".config/rofi/config.rasi".text = ''
       * {
           bg0:    #212121F2;

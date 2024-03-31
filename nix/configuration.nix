@@ -232,7 +232,7 @@
       bottles
 
       # Mail 
-      evolution
+      thunderbird
       protonmail-bridge
 
       # Themes

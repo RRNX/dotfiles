@@ -80,14 +80,13 @@
     	xkb.layout = "de";
 		  enable = true;
     	xkb.variant = "";
-		  displayManager.gdm = {
-        enable = true;
-        wayland = true;
-        settings = {
-          deamon = {
-            AutomaticLoginEnable = true;
-            AutomaticLogin = "hannes";
-          };
+      displayManager = {
+        autoLogin = {
+          enable = true;
+          user = "hannes";
+        };
+        lightdm = {
+          greeter.enable = false;
         };
       };
 	  };
@@ -258,7 +257,6 @@
       gimp
       feh
       libwebp
-      gnome.gdm
       # Misc
       wtype # does not work on gnome
       wl-clipboard

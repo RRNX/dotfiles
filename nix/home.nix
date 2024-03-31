@@ -213,12 +213,11 @@ in
         };
         gestures = { "workspace_swipe" = "off"; };
         exec-once = [
-          "hyprpaper"
           "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
           "gammastep -l 52.504575130169165:13.395872421222853"
           "waybar -b mainBar"
           "hyprcursor setcursor pointer 28"
-          "nm-applet --indicator"
+          "hyprpaper -c /home/hannes/.config/hypr/hyprpaper.conf"
           "dunst"
         ];
         windowrule = [ "rounding 10,^(org.gnome.Nautilus)$" ];
@@ -456,6 +455,7 @@ in
 
     home.file.".config/hypr/hyprpaper.conf".text = ''
       preload = /home/hannes/.config/wallpaper/wallpaper.png
+      wallpaper = ,/home/hannes/.config/wallpaper/wallpaper.png
       splash = false
     '';
 
